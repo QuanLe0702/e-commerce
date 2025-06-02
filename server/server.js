@@ -9,7 +9,7 @@ const app = express()
 app.use(cookieParser())
 const port = process.env.PORT || 8888
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true })) 
 dbConnect()
 initRoutes(app)
 
