@@ -43,33 +43,6 @@ const likeBlog = asyncHandler(async (req, res) => {
     }
 })
 
-const getBlogs = asyncHandler(async (req, res) => {
-    const response = await Blog.find()
-    return res.status(200).json({
-        success: response ? true : false,
-        blogs: response ? response : 'Cannot get blogs'
-    })
-})
-
-const updateBlog = asyncHandler(async (req, res) => {
-    const { bid } = req.params
-    if (Object.keys(req.body).length === 0) throw new Error('Missing inputs')
-    const response = await Blog.findByIdAndUpdate(bid, req.body, { new: true })
-    return res.status(200).json({
-        success: response ? true : false,
-        updatedBlog: response ? response : 'Cannot update blog'
-    })
-})
-
-const deleteBlog = asyncHandler(async (req, res) => {
-    const { bid } = req.params
-    const response = await Blog.findByIdAndDelete(bid)
-    return res.status(200).json({
-        success: response ? true : false,
-        deletedBlog: response ? response : 'Cannot delete blog'
-    })
-})
-
 const dislikeBlog = asyncHandler(async (req, res) => {
     const { _id } = req.user
     const { bid } = req.params
@@ -102,6 +75,33 @@ const dislikeBlog = asyncHandler(async (req, res) => {
     }
 })
 
+const getBlogs = asyncHandler(async (req, res) => {
+    const response = await Blog.find()
+    return res.status(200).json({
+        success: response ? true : false,
+        blogs: response ? response : 'Cannot get blogs'
+    })
+})
+
+const updateBlog = asyncHandler(async (req, res) => {
+    const { bid } = req.params
+    if (Object.keys(req.body).length === 0) throw new Error('Missing inputs')
+    const response = await Blog.findByIdAndUpdate(bid, req.body, { new: true })
+    return res.status(200).json({
+        success: response ? true : false,
+        updatedBlog: response ? response : 'Cannot update blog'
+    })
+})
+
+const deleteBlog = asyncHandler(async (req, res) => {
+    const { bid } = req.params
+    const response = await Blog.findByIdAndDelete(bid)
+    return res.status(200).json({
+        success: response ? true : false,
+        deletedBlog: response ? response : 'Cannot delete blog'
+    })
+})
+
 const getBlog = asyncHandler(async (req, res) => {
     const { bid } = req.params
     const response = await Blog.findByIdAndUpdate(bid, { $inc: { numberViews: 1 } }, { new: true })
@@ -113,6 +113,20 @@ const getBlog = asyncHandler(async (req, res) => {
     })
 })
 
+const uploadImagesBlog = asyncHandler(async (req, res) => {
+    const { bid } = req.params
+    if (!req.file || req.file.length === 0) throw new Error('No files uploaded')
+    const response = await Blog.findByIdAndUpdate(
+        bid,
+        { $push: { images: req.file.path } }, // Sử dụng $each để thêm nhiều ảnh vào mảng
+        { new: true }
+    )
+
+    return res.status(200).json({
+        status: response ? true : false,
+        uploadedBlog: response ? response : 'Cannot upload images'
+    })
+})
 
 
 module.exports = {
@@ -123,5 +137,6 @@ module.exports = {
     likeBlog,
     dislikeBlog,
     getBlog,
+    uploadImagesBlog
 }
 

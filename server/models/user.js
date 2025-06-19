@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
-const crypto = require('crypto')
+const crypto = require('crypto');
+const { type } = require('os');
 // Declare the Schema of the Mongo model
 var userSchema = new mongoose.Schema({
     firstname: {
@@ -29,11 +30,15 @@ var userSchema = new mongoose.Schema({
         type: String,
         default: 'user',
     },
-    cart: {
-        type: Array,
-        default: []
+    cart: [{
+        product: { type: mongoose.Types.ObjectId, ref: 'Product' },
+        quantity: Number,
+        color: String,
+        // price: Number
+    }],
+    address: {
+        type: String,
     },
-    address: [{ type: mongoose.Types.ObjectId, ref: 'Address' }],
     wishlist: [{ type: mongoose.Types.ObjectId, ref: 'Product' }],
     isBlocked: {
         type: Boolean,

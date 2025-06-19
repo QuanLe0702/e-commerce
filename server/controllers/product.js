@@ -130,31 +130,18 @@ const ratings = asyncHandler(async (req, res) => {
 })
 
 const uploadImagesProduct = asyncHandler(async (req, res) => {
-    console.log(req.file);
-    return res.json('OK')
-    // try {
-    //     const { pid } = req.params
-    //     if (!req.file) throw new Error('No file uploaded')
-    //     console.log('Uploaded file:', req.file)
-        
-    //     const product = await Product.findByIdAndUpdate(
-    //         pid,
-    //         { $push: { images: req.file.path } },
-    //         { new: true }
-    //     )
+        const { pid } = req.params
+        if (!req.files || req.files.length === 0) throw new Error('No files uploaded')
+        const response = await Product.findByIdAndUpdate(
+            pid,
+            { $push: { images: { $each: req.files.map(el => el.path) } } }, // Sử dụng $each để thêm nhiều ảnh vào mảng
+            { new: true }
+        )
 
-    //     return res.status(200).json({
-    //         success: true,
-    //         product: product,
-    //         uploadedImage: req.file.path
-    //     })
-    // } catch (error) {
-    //     console.error('Upload error:', error)
-    //     return res.status(500).json({
-    //         success: false,
-    //         message: error.message
-    //     })
-    // }
+        return res.status(200).json({
+            status: response ? true : false,
+            uploadedImages: response ? response : 'Cannot upload images'
+        })
 })
 
 module.exports = {
