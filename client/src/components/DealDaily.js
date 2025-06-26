@@ -37,8 +37,8 @@ const DealDaily = () => {
 
   // Hàm random sản phẩm, đảm bảo khác id hiện tại
   const fetchDealDaily = async (currentId = null) => {
-    const limit = 20;
-    const maxTries = 10;
+    const limit = 100;
+    const maxTries = 20;
     let found = false;
     let tries = 0;
     let result = null;
@@ -72,7 +72,7 @@ const DealDaily = () => {
         }
 
         // Nếu đã thử 5 lần mà không có 5 sao, chấp nhận 4 sao
-        if (tries >= 6 && tries < 10) {
+        if (tries >= 10 && tries < 20) {
           let fourStarProducts = response.products.filter(p => p.totalRatings === 4);
           if (currentId) fourStarProducts = fourStarProducts.filter(p => p._id !== currentId);
           if (fourStarProducts.length > 0) {
@@ -84,7 +84,7 @@ const DealDaily = () => {
         }
 
         // Nếu đã thử 10 lần, lấy sản phẩm có số sao cao nhất ở page này
-        if (tries >= 10) {
+        if (tries >= 20) {
           const maxRating = Math.max(...response.products.map(p => p.totalRatings));
           let maxRatingProducts = response.products.filter(p => p.totalRatings === maxRating);
           if (currentId) maxRatingProducts = maxRatingProducts.filter(p => p._id !== currentId);
