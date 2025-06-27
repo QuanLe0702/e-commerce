@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { apiGetProducts } from "../apis/product";
-import Product, { product } from "./Product";
+import  Product  from "./Product";
 import Slider from "react-slick";
+import { getNewProducts } from "../store/products/asyncActions";
+import { useDispatch } from "react-redux";
 
 const tabs = [
   { id: 1, name: "best sellers" },
@@ -21,6 +23,7 @@ const BestSeller = () => {
   const [newProducts, setNewProducts] = useState(null);
   const [activedTab, setActivedTab] = useState(1);
   const [products, setProducts] = useState(null);
+  const dispatch = useDispatch();
 
   const fetchProducts = async () => {
     const response = await Promise.all([
@@ -36,6 +39,7 @@ const BestSeller = () => {
 
   useEffect(() => {
     fetchProducts();
+    dispatch(getNewProducts);
   }, []);
   useEffect(() => {
     if (activedTab === 1) setProducts(bestSellers);
@@ -69,16 +73,16 @@ const BestSeller = () => {
           ))}
         </Slider>
       </div>
-      <div className='w-full flex gap-4 mt-4'>
+      <div className="w-full flex gap-4 mt-4">
         <img
           src="https://cdn.shopify.com/s/files/1/1903/4853/files/banner2-home2_2000x_crop_center.png?v=1613166657"
           alt="banner"
-          className='flex-1 object-contain'
+          className="flex-1 object-contain"
         />
         <img
           src="https://cdn.shopify.com/s/files/1/1903/4853/files/banner1-home2_2000x_crop_center.png?v=1613166657"
           alt="banner"
-          className='flex-1 object-contain'
+          className="flex-1 object-contain"
         />
       </div>
     </div>
